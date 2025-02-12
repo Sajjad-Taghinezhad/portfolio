@@ -12,7 +12,7 @@ type PortfolioItem = {
   date: string
 }
 
-export default function Portfolio() {
+export default function InsertFrom() {
   const [items, setItems] = useState<PortfolioItem[]>([])
 
   const addItem = (newItem: Omit<PortfolioItem, "id">) => {
