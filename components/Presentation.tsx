@@ -24,53 +24,21 @@ export default function Presentation() {
   const [selectedItem, setSelectedItem] = useState<PortfolioItem | null>(null)
 
   useEffect(() => {
-    // In a real application, you would fetch this data from an API or database
-    const dummyData: PortfolioItem[] = [
-      {
-        id: 1,
-        type: "certificate",
-        title: "Web Development Certification",
-        description: "Completed an intensive web development bootcamp",
-        date: "2023-05-15",
-        image: "/placeholder.svg?height=400&width=600",
-        details: "This certification covers HTML, CSS, JavaScript, and React.",
-      },
-      {
-        id: 2,
-        type: "achievement",
-        title: "First Place Hackathon",
-        description: "Won first place in a 48-hour coding challenge",
-        date: "2023-03-20",
-        image: "/placeholder.svg?height=400&width=600",
-        details: "Developed an innovative app for sustainable urban planning.",
-      },
-      {
-        id: 3,
-        type: "honor",
-        title: "Dean's List",
-        description: "Achieved academic excellence for the Fall 2023 semester",
-        date: "2023-12-20",
-        details: "Maintained a GPA of 3.8 or higher throughout the semester.",
-      },
-      {
-        id: 4,
-        type: "skill",
-        title: "React.js",
-        description: "Proficient in building modern web applications with React",
-        date: "2023-01-01",
-        details: "Experience with hooks, context API, and state management libraries.",
-      },
-      {
-        id: 5,
-        type: "certificate",
-        title: "AWS Certified Developer",
-        description: "Obtained AWS Certified Developer - Associate certification",
-        date: "2023-08-10",
-        image: "/placeholder.svg?height=400&width=600",
-        details: "Demonstrates proficiency in developing, deploying, and debugging cloud-based applications using AWS.",
-      },
-    ]
-    setItems(dummyData)
+    // Fetch data from the backend API
+    const fetchItems = async () => {
+      try {
+        const response = await fetch('/api/portfolios') // Call the backend API
+        if (!response.ok) {
+          throw new Error('Failed to fetch items')
+        }
+        const data: PortfolioItem[] = await response.json()
+        setItems(data)
+      } catch (error) {
+        console.error('Error fetching items:', error)
+      }
+    }
+
+    fetchItems()
   }, [])
 
   const goToPrevious = () => {
