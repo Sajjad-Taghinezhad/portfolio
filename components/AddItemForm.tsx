@@ -15,6 +15,7 @@ export default function AddItemForm({ onAddItem }: AddItemFormProps) {
   const [type, setType] = useState("")
   const [title, setTitle] = useState("")
   const [description, setDescription] = useState("")
+  const [details, setDetails] = useState("")
   const [date, setDate] = useState("")
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -29,7 +30,7 @@ export default function AddItemForm({ onAddItem }: AddItemFormProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 bg-gray-100 p-6 rounded-lg">
+    <form onSubmit={handleSubmit} className="space-y-4 bg-repeat-round p-6 rounded-lg">
       <div>
         <Label htmlFor="type">Type</Label>
         <Select value={type} onValueChange={setType}>
@@ -55,6 +56,16 @@ export default function AddItemForm({ onAddItem }: AddItemFormProps) {
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           placeholder="Enter description"
+          required
+        />
+      </div>
+      <div>
+        <Label htmlFor="detiles">Details</Label>
+        <Textarea
+          id="detiles"
+          value={details}
+          onChange={(e) => setDetails(e.target.value)}
+          placeholder="Enter details"
           required
         />
       </div>
