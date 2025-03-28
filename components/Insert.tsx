@@ -16,7 +16,7 @@ export default function InsertFrom() {
 
   const addItem = (newItem: Omit<PortfolioItem, "id">) => {
     setItems([...items, { ...newItem, id: Date.now() }])
-
+  }
 
   return (
     <div className="space-y-8">
