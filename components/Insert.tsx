@@ -2,7 +2,6 @@
 
 import { useState } from "react"
 import AddItemForm from "./AddItemForm"
-import PortfolioSection from "./PortfolioSection"
 
 type PortfolioItem = {
   id: number
@@ -28,14 +27,6 @@ export default function InsertFrom() {
   return (
     <div className="space-y-8">
       <AddItemForm onAddItem={addItem} />
-      {itemTypes.map((type) => (
-        <PortfolioSection
-          key={type}
-          title={type.charAt(0).toUpperCase() + type.slice(1) + "s"}
-          items={items.filter((item) => item.type === type)}
-          onDeleteItem={deleteItem}
-        />
-      ))}
     </div>
   )
 }
