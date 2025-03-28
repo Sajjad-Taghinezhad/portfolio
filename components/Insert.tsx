@@ -16,13 +16,7 @@ export default function InsertFrom() {
 
   const addItem = (newItem: Omit<PortfolioItem, "id">) => {
     setItems([...items, { ...newItem, id: Date.now() }])
-  }
 
-  const deleteItem = (id: number) => {
-    setItems(items.filter((item) => item.id !== id))
-  }
-
-  const itemTypes = ["certificate", "achievement", "honor", "skill"]
 
   return (
     <div className="space-y-8">
