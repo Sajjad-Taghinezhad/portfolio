@@ -100,7 +100,7 @@ export default function Presentation() {
 
   return (
     <div className="flex flex-col items-center justify-center h-full">
-      <div className="relative w-full max-w-3xl aspect-video bg-card rounded-lg shadow-lg overflow-hidden">
+      <div className="relative w-full max-w-6xl h-full aspect-video bg-card rounded-lg shadow-lg overflow-hidden">
         {showList ? (
           <ItemList items={items} onItemClick={goToItem} onItemSelect={openModal} />
         ) : (
