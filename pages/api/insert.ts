@@ -37,7 +37,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     const form = formidable({
         multiples: false, // Only allow a single file upload
-        uploadDir: path.join(process.cwd(), 'public/uploads'), // Directory to store uploaded files
+        uploadDir: path.join(process.cwd(), 'public'), // Directory to store uploaded files
         keepExtensions: true, // Keep file extensions
         filter: (part) => {
             // Only accept image and PDF files
