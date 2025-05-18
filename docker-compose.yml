@@ -6,7 +6,7 @@ services:
       - .:/app
     ports:
       - "3000:3000"
-    command: sh -c "yarn dev"
+    command: tail -f /dev/null
 
   db:
     image: postgres:17
