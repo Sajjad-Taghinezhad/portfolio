@@ -58,11 +58,22 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         );
 
         // Extract fields and file
-        const { title, type, description, date, details } = fields;
-        const file = files.file as File;
+        function getField(field: any) {
+            if (Array.isArray(field)) return field[0];
+            return field;
+        }
 
-        // Validate required fields
-        if (!title || !type || !description || !date || !details || !file) {
+        const title = getField(fields.title);
+        const type = getField(fields.type);
+        const description = getField(fields.description);
+        const date = getField(fields.date);
+        const details = getField(fields.details);
+        let file = files.file as File | File[] | undefined;
+
+        if (Array.isArray(file)) file = file[0];
+
+        // Validate required fields and file
+        if (!title || !type || !description || !date || !details || !file || !file.filepath) {
             return res.status(400).json({ message: 'Missing required fields or file' });
         }
 
@@ -75,6 +86,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             VALUES ($1, $2, $3, $4, $5, $6)
         `;
         const values = [title, type, description, date, filePath, details];
+        console.log('Inserting data into the database:', title, type, description, date, filePath, details);
 
         await pool.query(query, values);
 
