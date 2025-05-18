@@ -5,10 +5,21 @@ import { Pool } from 'pg';
 const pool = new Pool({
     user: process.env.DB_USER, // Replace with your database username
     host: process.env.DB_HOST, // Replace with your database host
-    database: 'portfolio', // Replace with your database name
+    database: process.env.DB_NAME, // Replace with your database name
     password: process.env.DB_PASSWORD, // Replace with your database password
     port: Number(process.env.DB_PORT) || 5432, // Replace with your database port
 });
+
+// Define the type of row
+type Item = {
+    id: number;
+    title: string;
+    type: string;
+    description: string;
+    date: string;
+    image: string;
+    details: string;
+};
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse): Promise<void> {
     if (req.method !== 'GET') {
@@ -20,7 +31,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         const result = await pool.query('SELECT * FROM items');
 
         // Map the database rows to the desired JSON format
-        const data = result.rows.map((row) => ({
+        const data = result.rows.map((row: Item) => ({
             id: row.id,
             type: row.type,
             title: row.title,
