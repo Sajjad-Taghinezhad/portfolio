@@ -4,9 +4,9 @@ services:
     working_dir: /app
     volumes:
       - .:/app
-    ports:
-      - "3000:3000"
-    command: ./entrypoint.sh
+    command: bash -c "yarn && yarn knex migrate:latest && yarn build && yarn start"
+    env_file:
+      - .env
   db:
     image: postgres:17
     environment:
@@ -15,8 +15,6 @@ services:
       POSTGRES_HOST_AUTH_METHOD: trust
       POSTGRES_INITDB_ARGS: "--encoding=UTF8 --locale=en_US.UTF-8"
       POSTGRES_DB: portfolio
-    ports:
-      - "5432:5432"
     volumes:
       - portfolio_data:/var/lib/postgresql/data
 
