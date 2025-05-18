@@ -1,0 +1,6 @@
+- [ ] Switch from Postgresql to sqlite database file 
+- [ ] Add security for inserting new data 
+- [ ] Implement management page (insert, delete, edit)
+- [ ] Fix new file bug(when a new file uploads the app needs to rebuild)
+- [ ] Redesign the slideshow page to add some images 
+- [ ] Add security code for getting the certificate's image or file
