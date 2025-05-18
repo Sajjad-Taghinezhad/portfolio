@@ -78,7 +78,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         }
 
         // Get the file path
-        const filePath = `/uploads/${path.basename(file.filepath)}`;
+        const filePath = `/${path.basename(file.filepath)}`;
 
         // Insert the data into the "items" table
         const query = `
