@@ -1,5 +1,15 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { Pool } from 'pg';
+import formidable, { File } from 'formidable';
+import fs from 'fs';
+import path from 'path';
+
+// Disable body parsing by Next.js (required for file uploads)
+export const config = {
+    api: {
+        bodyParser: false,
+    },
+};
 
 // Create a connection pool to the PostgreSQL database
 const pool = new Pool({
@@ -16,8 +26,8 @@ type Item = {
     type: string;
     description: string;
     date: string;
-    image: string;
     details: string;
+    image: string; // File path for the uploaded file
 };
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse): Promise<void> {
@@ -25,28 +35,53 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(405).json({ message: 'Method Not Allowed' });
     }
 
-    try {
-        // Parse the JSON input from the request body
-        const { title, type, description, date, image, details }: Item = req.body;
+    const form = formidable({
+        multiples: false, // Only allow a single file upload
+        uploadDir: path.join(process.cwd(), 'public/uploads'), // Directory to store uploaded files
+        keepExtensions: true, // Keep file extensions
+        filter: (part) => {
+            // Only accept image and PDF files
+            const mimeTypes = ['image/jpeg', 'image/png', 'application/pdf'];
+            return mimeTypes.includes(part.mimetype || '');
+        },
+    });
 
-        // Validate the input
-        if (!title || !type || !description || !date || !image || !details) {
-            return res.status(400).json({ message: 'Missing required fields' });
+    try {
+        // Parse the form data
+        const { fields, files } = await new Promise<{ fields: formidable.Fields; files: formidable.Files }>(
+            (resolve, reject) => {
+                form.parse(req, (err, fields, files) => {
+                    if (err) reject(err);
+                    else resolve({ fields, files });
+                });
+            }
+        );
+
+        // Extract fields and file
+        const { title, type, description, date, details } = fields;
+        const file = files.file as File;
+
+        // Validate required fields
+        if (!title || !type || !description || !date || !details || !file) {
+            return res.status(400).json({ message: 'Missing required fields or file' });
         }
+
+        // Get the file path
+        const filePath = `/uploads/${path.basename(file.filepath)}`;
 
         // Insert the data into the "items" table
         const query = `
             INSERT INTO items (title, type, description, date, image, details)
             VALUES ($1, $2, $3, $4, $5, $6)
         `;
-        const values = [title, type, description, date, image, details];
+        const values = [title, type, description, date, filePath, details];
 
         await pool.query(query, values);
 
         // Return a success response
-        res.status(201).json({ message: 'Item inserted successfully' });
+        res.status(201).json({ message: 'Item inserted successfully', filePath });
     } catch (error: any) {
-        console.error('Database insert error:', error);
+        console.error('Error handling file upload or database insert:', error);
         res.status(500).json({ message: 'Error inserting data into the database', error: error.message });
     }
 }
